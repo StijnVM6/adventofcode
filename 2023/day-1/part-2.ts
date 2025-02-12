@@ -5,35 +5,12 @@ import * as fs from "fs";
 
 const filePath = "./2023/day-1/data/data.txt";
 
-const data = fs.readFileSync(filePath, "utf-8").split("\n");
+export const data = fs.readFileSync(filePath, "utf-8").split("\n");
 
-/*
-const verifyWordNumber = (substr: string): string => {
-	switch (true) {
-		case substr.includes("one"):
-			return "one";
-		case substr.includes("two"):
-			return "two";
-		case substr.includes("three"):
-			return "three";
-		case substr.includes("four"):
-			return "four";
-		case substr.includes("five"):
-			return "five";
-		case substr.includes("six"):
-			return "six";
-		case substr.includes("seven"):
-			return "seven";
-		case substr.includes("eight"):
-			return "eight";
-		case substr.includes("nine"):
-			return "nine";
-		default:
-			return "";
-	}
-};
-*/
-const verifyWordNumber = (substr: string, firstOrLast: string): string => {
+export const verifyWordNumber = (
+	substr: string,
+	firstOrLast: string
+): string => {
 	const wordArray = [];
 	if (substr.includes("one")) wordArray.push("one");
 	if (substr.includes("two")) wordArray.push("two");
@@ -63,7 +40,7 @@ const verifyWordNumber = (substr: string, firstOrLast: string): string => {
 	}
 };
 
-const wordNumberToNumber = (wordNumber: string): number => {
+export const wordNumberToNumber = (wordNumber: string): number => {
 	switch (true) {
 		case wordNumber === "one":
 			return 1;
@@ -88,11 +65,11 @@ const wordNumberToNumber = (wordNumber: string): number => {
 	}
 };
 
-const lineToArray = (line: string): string[] => {
+export const lineToArray = (line: string): string[] => {
 	return line.split("");
 };
 
-const getPositionOfNumber = (
+export const getPositionOfNumber = (
 	number: number,
 	line: string,
 	firstOrLast: string
@@ -104,7 +81,7 @@ const getPositionOfNumber = (
 	} else throw new Error("Invalid firstOrLast");
 };
 
-const checkStringForWordNumbers = (
+export const checkStringForWordNumbers = (
 	numberIndex: number,
 	line: string,
 	firstOrLast: string
@@ -120,103 +97,108 @@ const checkStringForWordNumbers = (
 	} else throw new Error("Invalid firstOrLast");
 };
 
-const getFirstNumber = (line: string[]): number => {
+export const getFirstNumber = (line: string[]): number => {
 	const firstNumber = line.find(
 		(character: string) => !Number.isNaN(parseInt(character))
 	);
 	return Number(firstNumber);
 };
 
-const getLastNumber = (line: string[]) => {
+export const getLastNumber = (line: string[]) => {
 	const lastNumber = line.findLast(
 		(character: any) => !Number.isNaN(parseInt(character))
 	);
 	return Number(lastNumber);
 };
 
-const setNumber = (wordNumber: string, number: number): number => {
+export const setNumber = (wordNumber: string, number: number): number => {
 	if (wordNumber && wordNumber !== "") {
 		return Number(wordNumberToNumber(wordNumber));
 	} else return number;
 };
 
-const getNumberOfLine = (firstNumber: number, lastNumber: number): number => {
+export const getNumberOfLine = (
+	firstNumber: number,
+	lastNumber: number
+): number => {
 	const number = firstNumber.toString() + lastNumber.toString();
 	return Number(number);
 };
 
-//
-// CALCULATE
-//
-let result = 0;
+export const calculate = (data: string[]): number => {
+	let result = 0;
 
-for (const line of data) {
-	const lineArray = lineToArray(line);
-	console.log(`lineArray: ${lineArray}`);
+	for (const line of data) {
+		const lineArray = lineToArray(line);
+		// console.log(`lineArray: ${lineArray}`);
 
-	// FIRST NUMBER
-	const firstNumber = getFirstNumber(lineArray);
-	// console.log(`firstNumber: ${firstNumber}`);
+		// FIRST NUMBER
+		const firstNumber = getFirstNumber(lineArray);
+		// console.log(`firstNumber: ${firstNumber}`);
 
-	let firstNumberIndex = 0;
-	let firstWordNumber = "";
-	if (!Number.isNaN(firstNumber)) {
-		// numbers found
-		firstNumberIndex = getPositionOfNumber(firstNumber, line, "first");
-		// console.log(`firstNumberIndex: ${firstNumberIndex}`);
-		firstWordNumber = checkStringForWordNumbers(
-			firstNumberIndex,
-			line,
-			"first"
-		);
-	} else {
-		// no numbers found
-		firstWordNumber = checkStringForWordNumbers(line.length, line, "first");
-	}
-	// console.log(`wordNumber: ${firstWordNumber}`);
-
-	const firstNumberFinal = setNumber(firstWordNumber, firstNumber);
-
-	// LAST NUMBER
-	const lastNumber = getLastNumber(lineArray);
-	// console.log(`lastNumber: ${lastNumber}`);
-
-	let lastNumberIndex = 0;
-	let lastWordNumber = "";
-	if (Number.isNaN(firstNumber)) {
-		// no numbers found
-		lastWordNumber = checkStringForWordNumbers(0, line, "last");
-	} else {
-		// numbers found
-		lastNumberIndex = getPositionOfNumber(lastNumber, line, "last");
-		if (firstNumberIndex === lastNumberIndex) {
-			// only one number present
-			lastWordNumber = checkStringForWordNumbers(
+		let firstNumberIndex = 0;
+		let firstWordNumber = "";
+		if (!Number.isNaN(firstNumber)) {
+			// numbers found
+			firstNumberIndex = getPositionOfNumber(firstNumber, line, "first");
+			// console.log(`firstNumberIndex: ${firstNumberIndex}`);
+			firstWordNumber = checkStringForWordNumbers(
 				firstNumberIndex,
 				line,
-				"last"
+				"first"
 			);
 		} else {
-			// multiple numbers present
-			lastWordNumber = checkStringForWordNumbers(
-				lastNumberIndex,
+			// no numbers found
+			firstWordNumber = checkStringForWordNumbers(
+				line.length,
 				line,
-				"last"
+				"first"
 			);
 		}
+		// console.log(`wordNumber: ${firstWordNumber}`);
+
+		const firstNumberFinal = setNumber(firstWordNumber, firstNumber);
+
+		// LAST NUMBER
+		const lastNumber = getLastNumber(lineArray);
+		// console.log(`lastNumber: ${lastNumber}`);
+
+		let lastNumberIndex = 0;
+		let lastWordNumber = "";
+		if (Number.isNaN(firstNumber)) {
+			// no numbers found
+			lastWordNumber = checkStringForWordNumbers(0, line, "last");
+		} else {
+			// numbers found
+			lastNumberIndex = getPositionOfNumber(lastNumber, line, "last");
+			if (firstNumberIndex === lastNumberIndex) {
+				// only one number present
+				lastWordNumber = checkStringForWordNumbers(
+					firstNumberIndex,
+					line,
+					"last"
+				);
+			} else {
+				// multiple numbers present
+				lastWordNumber = checkStringForWordNumbers(
+					lastNumberIndex,
+					line,
+					"last"
+				);
+			}
+		}
+		// console.log(`lastWordNumber: ${lastWordNumber}`);
+
+		const lastNumberFinal = setNumber(lastWordNumber, lastNumber);
+
+		// console.log(`firstNumberFinal: ${firstNumberFinal}`);
+		// console.log(`lastNumberFinal: ${lastNumberFinal}`);
+
+		const number = getNumberOfLine(firstNumberFinal, lastNumberFinal);
+		// console.log(`number: ${number}\n`);
+		result += Number(number);
 	}
-	// console.log(`lastWordNumber: ${lastWordNumber}`);
 
-	const lastNumberFinal = setNumber(lastWordNumber, lastNumber);
-
-	// console.log(`firstNumberFinal: ${firstNumberFinal}`);
-	// console.log(`lastNumberFinal: ${lastNumberFinal}`);
-
-	const number = getNumberOfLine(firstNumberFinal, lastNumberFinal);
-	console.log(`number: ${number}\n`);
-	result += Number(number);
-}
-
-console.log(`total: ${result}`);
-
-export default result;
+	// console.log(`total: ${result}`);
+	return result;
+};
